@@ -22,6 +22,7 @@ public class PantallaPrincipal extends JFrame implements ActionListener {
 	private JTextField txtA;
 	private JButton btnSalir;
 	private JButton btnEntrar;
+	private InicioDeSesion IS;
 	/**
 	 * Launch the application.
 	 */
@@ -72,6 +73,7 @@ public class PantallaPrincipal extends JFrame implements ActionListener {
 	
 		btnEntrar = new JButton("");
 		btnEntrar.setIcon(new ImageIcon(PantallaPrincipal.class.getResource("/Imagenes/entrar (1).png")));
+		btnEntrar.addActionListener(this);
 		btnEntrar.setBounds(83, 221, 93, 29);
 		ContentPanel.add(btnEntrar);
 		
@@ -88,5 +90,10 @@ public class PantallaPrincipal extends JFrame implements ActionListener {
 			System.exit(WIDTH);
 		}
 		
+		if(e.getSource().equals(btnEntrar)) {
+			IS = new InicioDeSesion();
+			IS.setVisible(true);
+			dispose();
 	}
-}
+}      
+	}
