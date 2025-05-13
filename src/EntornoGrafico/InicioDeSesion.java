@@ -91,6 +91,11 @@ public class InicioDeSesion extends JFrame {
 		btnNewButton.setBounds(10, 157, 175, 43);
 		panel.add(btnNewButton);
 		
+		JButton btnRegistro = new JButton("");
+		btnRegistro.setIcon(new ImageIcon(InicioDeSesion.class.getResource("/Imagenes/Registro.png")));
+		btnRegistro.setBounds(242, 132, 99, 32);
+		panel.add(btnRegistro);
+		
 		JLabel lblNewLabel_2 = new JLabel("¿Aún no tienes cuenta en Digital Dungeon? ");
 		lblNewLabel_2.setForeground(new Color(255, 255, 255));
 		lblNewLabel_2.setBounds(195, 18, 209, 63);
