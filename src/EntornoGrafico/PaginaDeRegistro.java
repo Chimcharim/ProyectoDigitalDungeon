@@ -10,12 +10,15 @@ import java.awt.Color;
 import javax.swing.JLabel;
 import java.awt.Font;
 import javax.swing.JTextField;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
 
 public class PaginaDeRegistro extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private JTextField textField;
+	private JTextField textField_1;
 
 	/**
 	 * Launch the application.
@@ -58,9 +61,33 @@ public class PaginaDeRegistro extends JFrame {
 		panel.add(lblNewLabel);
 		
 		textField = new JTextField();
-		textField.setBounds(10, 46, 86, 20);
+		textField.setText("Nombre"); // Placeholder al inicio
+		textField.setForeground(Color.GRAY);
+
+		textField.addFocusListener(new FocusAdapter() {
+			@Override
+			public void focusGained(FocusEvent e) {
+				if (textField.getText().equals("Nombre")) {
+					textField.setText("");
+					textField.setForeground(Color.BLACK);
+				}
+			}
+			@Override
+			public void focusLost(FocusEvent e) {
+				if (textField.getText().isEmpty()) {
+					textField.setText("Nombre");
+					textField.setForeground(Color.GRAY);
+				}
+			}
+		});
+
+		textField.setBounds(10, 59, 150, 25); // Ancho un poco mayor
 		panel.add(textField);
 		textField.setColumns(10);
+		
+		textField_1 = new JTextField();
+		textField_1.setBounds(10, 104, 150, 24);
+		panel.add(textField_1);
+		textField_1.setColumns(10);
 	}
-
 }
