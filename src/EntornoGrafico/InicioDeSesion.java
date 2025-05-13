@@ -17,6 +17,8 @@ import javax.swing.JButton;
 import javax.swing.ImageIcon;
 import java.awt.Font;
 import java.awt.Panel;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class InicioDeSesion extends JFrame {
 
@@ -24,7 +26,7 @@ public class InicioDeSesion extends JFrame {
 	private JPanel contentPane;
 	private JTextField textField;
 	private JPasswordField passwordField;
-
+	private InicioDeSesion RE;
 	/**
 	 * Launch the application.
 	 */
@@ -92,6 +94,16 @@ public class InicioDeSesion extends JFrame {
 		panel.add(btnNewButton);
 		
 		JButton btnRegistro = new JButton("");
+		
+			
+			btnRegistro.addActionListener(new ActionListener() {
+			    public void actionPerformed(ActionEvent e) {
+			        PaginaDeRegistro ventanaRegistro = new PaginaDeRegistro();
+			        ventanaRegistro.setVisible(true);
+			        dispose(); 
+			    }
+			
+		});
 		btnRegistro.setIcon(new ImageIcon(InicioDeSesion.class.getResource("/Imagenes/Registro.png")));
 		btnRegistro.setBounds(242, 132, 99, 32);
 		panel.add(btnRegistro);
