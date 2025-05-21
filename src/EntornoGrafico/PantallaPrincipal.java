@@ -13,6 +13,10 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.ImageIcon;
 import java.awt.event.ActionListener;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.awt.event.ActionEvent;
 
 public class PantallaPrincipal extends JFrame implements ActionListener {
@@ -77,6 +81,8 @@ public class PantallaPrincipal extends JFrame implements ActionListener {
 		btnEntrar.setBounds(83, 221, 93, 29);
 		ContentPanel.add(btnEntrar);
 		
+		
+		
 		JLabel lblNewLabel = new JLabel("fondo");
 		lblNewLabel.setBackground(new Color(0, 0, 43));
 		lblNewLabel.setIcon(new ImageIcon(PantallaPrincipal.class.getResource("/Imagenes/_cb5f8b2d-a215-4281-a9b8-4bc4fd1fd199 (1).jpeg")));
@@ -95,5 +101,6 @@ public class PantallaPrincipal extends JFrame implements ActionListener {
 			IS.setVisible(true);
 			dispose();
 	}
-}      
+}
+	
 	}

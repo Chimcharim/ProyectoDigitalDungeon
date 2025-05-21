@@ -5,9 +5,15 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+
+import BaseDatos.ConexionBD;
+
 import java.awt.Toolkit;
 import java.awt.Color;
+import java.awt.Desktop;
+
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.JPasswordField;
 import javax.swing.JSlider;
@@ -17,6 +23,13 @@ import javax.swing.JButton;
 import javax.swing.ImageIcon;
 import java.awt.Font;
 import java.awt.Panel;
+import java.awt.event.ActionListener;
+import java.net.URI;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.awt.event.ActionEvent;
 
 public class InicioDeSesion extends JFrame {
 
@@ -24,7 +37,8 @@ public class InicioDeSesion extends JFrame {
 	private JPanel contentPane;
 	private JTextField textField;
 	private JPasswordField passwordField;
-
+	private InicioDeSesion RE;
+	private Object btnInicio;
 	/**
 	 * Launch the application.
 	 */
@@ -44,7 +58,7 @@ public class InicioDeSesion extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public InicioDeSesion() {
+	public  InicioDeSesion() {
 		setIconImage(Toolkit.getDefaultToolkit().getImage(InicioDeSesion.class.getResource("/Imagenes/DigitalDungeonlogo.png")));
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
@@ -67,29 +81,79 @@ public class InicioDeSesion extends JFrame {
 		lblNewLabel.setBounds(10, 29, 72, 14);
 		panel.add(lblNewLabel);
 		
-		JLabel lblNewLabel_1 = new JLabel("CONTRASEÑA:");
-		lblNewLabel_1.setForeground(new Color(255, 255, 255));
-		lblNewLabel_1.setFont(new Font("Segoe UI Black", Font.PLAIN, 11));
-		lblNewLabel_1.setBounds(10, 67, 87, 14);
-		panel.add(lblNewLabel_1);
+		JLabel lblpassw = new JLabel("CONTRASEÑA:");
+		lblpassw.setForeground(new Color(255, 255, 255));
+		lblpassw.setFont(new Font("Segoe UI Black", Font.PLAIN, 11));
+		lblpassw.setBounds(10, 67, 87, 14);
+		panel.add(lblpassw);
 		
-		textField = new JTextField();
-		textField.setBounds(92, 26, 93, 20);
-		panel.add(textField);
-		textField.setColumns(10);
+		JTextField txtUsuario = new JTextField();
+		txtUsuario.setBounds(92, 26, 93, 20);
+		panel.add(txtUsuario);
+		txtUsuario.setColumns(10);
 		
-		passwordField = new JPasswordField();
-		passwordField.setBounds(92, 64, 93, 20);
-		panel.add(passwordField);
+		JPasswordField txtpassw = new JPasswordField();
+		txtpassw.setBounds(92, 64, 93, 20);
+		panel.add(txtpassw);
 		
-		Checkbox checkbox = new Checkbox("Soy empleado");
-		checkbox.setBounds(10, 104, 175, 22);
-		panel.add(checkbox);
 		
-		JButton btnNewButton = new JButton("");
-		btnNewButton.setIcon(new ImageIcon(InicioDeSesion.class.getResource("/Imagenes/inicio_1.png")));
-		btnNewButton.setBounds(10, 157, 175, 43);
-		panel.add(btnNewButton);
+		
+		JButton btnInicio = new JButton("");
+		btnInicio.setIcon(new ImageIcon(InicioDeSesion.class.getResource("/Imagenes/inicio_1.png")));
+		btnInicio.setBounds(10, 157, 175, 43);
+		panel.add(btnInicio);
+		
+	       // Evento para botón de iniciar sesión
+        btnInicio.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                String nombre = txtUsuario.getText().trim();
+                String contraseña = new String(txtpassw.getPassword());
+
+                if (nombre.isEmpty() || contraseña.isEmpty()) {
+                    JOptionPane.showMessageDialog(null, "Todos los campos son obligatorios", "Error", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+
+                try (Connection con = ConexionBD.getConexion()) {
+                    String query = "SELECT * FROM personas WHERE nombre = ? AND Contraseña = ?";
+                    PreparedStatement ps = con.prepareStatement(query);
+                    ps.setString(1, nombre);
+                    ps.setString(2, contraseña);
+
+                    ResultSet rs = ps.executeQuery();
+                    if (rs.next()) {
+                        // Autenticación exitosa
+                        JOptionPane.showMessageDialog(null, "Inicio de sesión exitoso");
+                        SesionIniciada sesionIniciada = new SesionIniciada();
+                        sesionIniciada.setVisible(true);
+                        dispose();
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Usuario o contraseña incorrectos", "Error", JOptionPane.ERROR_MESSAGE);
+                    }
+
+                } catch (Exception ex) {
+                    JOptionPane.showMessageDialog(null, "Error al conectar con la base de datos", "Error", JOptionPane.ERROR_MESSAGE);
+                    ex.printStackTrace();
+                }
+            }
+        });
+
+		JButton btnRegistro = new JButton("");
+        btnRegistro.setIcon(new ImageIcon(InicioDeSesion.class.getResource("/Imagenes/Registro.png")));
+        btnRegistro.setBounds(242, 132, 99, 32);
+        panel.add(btnRegistro);
+        
+        // ActionListener para el botón btnRegistro
+        btnRegistro.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    Desktop.getDesktop().browse(new URI("http://localhost/proyecto_cyber/code.php")); // Cambia la URL según sea necesario
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+            }
+        });
 		
 		JLabel lblNewLabel_2 = new JLabel("¿Aún no tienes cuenta en Digital Dungeon? ");
 		lblNewLabel_2.setForeground(new Color(255, 255, 255));
