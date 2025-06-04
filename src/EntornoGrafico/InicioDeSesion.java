@@ -24,11 +24,13 @@ import javax.swing.ImageIcon;
 import java.awt.Font;
 import java.awt.Panel;
 import java.awt.event.ActionListener;
+
 import java.net.URI;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+
 import java.awt.event.ActionEvent;
 
 public class InicioDeSesion extends JFrame {
@@ -38,7 +40,9 @@ public class InicioDeSesion extends JFrame {
 	private JTextField textField;
 	private JPasswordField passwordField;
 	private InicioDeSesion RE;
+
 	private Object btnInicio;
+
 	/**
 	 * Launch the application.
 	 */
@@ -166,6 +170,21 @@ public class InicioDeSesion extends JFrame {
                 }
             }
         });
+		
+	
+		
+			
+			btnRegistro.addActionListener(new ActionListener() {
+			    public void actionPerformed(ActionEvent e) {
+			        PaginaDeRegistro ventanaRegistro = new PaginaDeRegistro();
+			        ventanaRegistro.setVisible(true);
+			        dispose(); 
+			    }
+			
+		});
+		btnRegistro.setIcon(new ImageIcon(InicioDeSesion.class.getResource("/Imagenes/Registro.png")));
+		btnRegistro.setBounds(242, 132, 99, 32);
+		panel.add(btnRegistro);
 		
 		JLabel lblNewLabel_2 = new JLabel("¿Aún no tienes cuenta en Digital Dungeon? ");
 		lblNewLabel_2.setForeground(new Color(255, 255, 255));
