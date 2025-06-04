@@ -65,7 +65,7 @@ public class ComprarVideojuego extends JFrame {
             JOptionPane.showMessageDialog(this, "Error al cargar videojuegos: " + ex.getMessage());
         }
     }
-
+//hola mundo
     private void comprarVideojuego() {
         int filaSeleccionada = tablaVideojuegos.getSelectedRow();
         if (filaSeleccionada == -1) {
