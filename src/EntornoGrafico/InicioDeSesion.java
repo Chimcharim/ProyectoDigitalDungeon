@@ -104,39 +104,51 @@ public class InicioDeSesion extends JFrame {
 		panel.add(btnInicio);
 		
 	       // Evento para botón de iniciar sesión
-        btnInicio.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                String nombre = txtUsuario.getText().trim();
-                String contraseña = new String(txtpassw.getPassword());
+		btnInicio.addActionListener(new ActionListener() {
+		    public void actionPerformed(ActionEvent e) {
+		        String nombre = txtUsuario.getText().trim();
+		        String contraseña = new String(txtpassw.getPassword());
 
-                if (nombre.isEmpty() || contraseña.isEmpty()) {
-                    JOptionPane.showMessageDialog(null, "Todos los campos son obligatorios", "Error", JOptionPane.ERROR_MESSAGE);
-                    return;
-                }
+		        if (nombre.isEmpty() || contraseña.isEmpty()) {
+		            JOptionPane.showMessageDialog(null, "Todos los campos son obligatorios", "Error", JOptionPane.ERROR_MESSAGE);
+		            return;
+		        }
 
-                try (Connection con = ConexionBD.getConexion()) {
-                    String query = "SELECT * FROM personas WHERE nombre = ? AND Contraseña = ?";
-                    PreparedStatement ps = con.prepareStatement(query);
-                    ps.setString(1, nombre);
-                    ps.setString(2, contraseña);
+		        try (Connection con = ConexionBD.getConexion()) {
+		            String query = "SELECT id_personas, rol FROM personas WHERE nombre = ? AND Contraseña = ?";
+		            PreparedStatement ps = con.prepareStatement(query);
+		            ps.setString(1, nombre);
+		            ps.setString(2, contraseña);
 
-                    ResultSet rs = ps.executeQuery();
-                    if (rs.next()) {
-                        // Autenticación exitosa
-                        JOptionPane.showMessageDialog(null, "Inicio de sesión exitoso");
-                        SesionIniciada sesionIniciada = new SesionIniciada();
-                        sesionIniciada.setVisible(true);
-                        dispose();
-                    } else {
-                        JOptionPane.showMessageDialog(null, "Usuario o contraseña incorrectos", "Error", JOptionPane.ERROR_MESSAGE);
-                    }
+		            ResultSet rs = ps.executeQuery();
+		            if (rs.next()) {
+		                Sesion.idUsuario = rs.getInt("id_personas");
+		                String rol = rs.getString("rol");
 
-                } catch (Exception ex) {
-                    JOptionPane.showMessageDialog(null, "Error al conectar con la base de datos", "Error", JOptionPane.ERROR_MESSAGE);
-                    ex.printStackTrace();
-                }
-            }
-        });
+		                JOptionPane.showMessageDialog(null, "Inicio de sesión exitoso");
+
+		                if (rol.equalsIgnoreCase("cliente")) {
+		                    MenuClientes menuCliente = new MenuClientes();
+		                    menuCliente.setVisible(true);
+		                } else if (rol.equalsIgnoreCase("empleado")) {
+		                    MenuEmpleados menuEmpleados = new MenuEmpleados();
+		                    menuEmpleados.setVisible(true);
+		                } else {
+		                    JOptionPane.showMessageDialog(null, "Rol no reconocido", "Error", JOptionPane.ERROR_MESSAGE);
+		                    return;
+		                }
+
+		                dispose();
+		            } else {
+		                JOptionPane.showMessageDialog(null, "Usuario o contraseña incorrectos", "Error", JOptionPane.ERROR_MESSAGE);
+		            }
+
+		        } catch (Exception ex) {
+		            JOptionPane.showMessageDialog(null, "Error al conectar con la base de datos", "Error", JOptionPane.ERROR_MESSAGE);
+		            ex.printStackTrace();
+		        }
+		    }
+		});
 
 		JButton btnRegistro = new JButton("");
         btnRegistro.setIcon(new ImageIcon(InicioDeSesion.class.getResource("/Imagenes/Registro.png")));
