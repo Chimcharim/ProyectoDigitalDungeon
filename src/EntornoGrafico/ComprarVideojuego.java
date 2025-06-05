@@ -25,9 +25,15 @@ public class ComprarVideojuego extends JFrame {
         modeloTabla = new DefaultTableModel();
         modeloTabla.setColumnIdentifiers(new String[] { "ID", "Título", "Plataforma", "Género", "Precio (€)" });
         tablaVideojuegos = new JTable(modeloTabla);
-        JScrollPane scroll = new JScrollPane(tablaVideojuegos);
-        panel.add(scroll, BorderLayout.CENTER);
 
+     // Ocultar la columna ID visualmente
+     tablaVideojuegos.getColumnModel().getColumn(0).setMinWidth(0);
+     tablaVideojuegos.getColumnModel().getColumn(0).setMaxWidth(0);
+     tablaVideojuegos.getColumnModel().getColumn(0).setWidth(0);
+
+     JScrollPane scroll = new JScrollPane(tablaVideojuegos);
+     panel.add(scroll, BorderLayout.CENTER);
+     
         JPanel botonesPanel = new JPanel();
         botonesPanel.setBackground(new Color(0, 0, 85));
         JButton btnComprar = new JButton("Comprar");

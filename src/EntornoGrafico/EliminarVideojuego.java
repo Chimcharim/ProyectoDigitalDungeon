@@ -24,6 +24,11 @@ public class EliminarVideojuego extends JFrame {
         tabla = new JTable(modelo);
         tabla.setFillsViewportHeight(true);
 
+        // Ocultar la columna de ID
+        tabla.getColumnModel().getColumn(0).setMinWidth(0);
+        tabla.getColumnModel().getColumn(0).setMaxWidth(0);
+        tabla.getColumnModel().getColumn(0).setWidth(0);
+
         JScrollPane scroll = new JScrollPane(tabla);
         scroll.setPreferredSize(new Dimension(600, 300));
 
@@ -74,17 +79,38 @@ public class EliminarVideojuego extends JFrame {
             JOptionPane.showMessageDialog(this, "Selecciona un videojuego para eliminar.");
             return;
         }
-
         int id = (int) modelo.getValueAt(fila, 0);
 
-        try (Connection conn = DriverManager.getConnection("jdbc:mysql://localhost/proyecto_cyber", "root", "");
-             PreparedStatement stmt = conn.prepareStatement("DELETE FROM videojuegos WHERE id_videojuego = ?")) {
+        try (Connection conn = DriverManager.getConnection("jdbc:mysql://localhost/proyecto_cyber", "root", "")) {
 
+            // Verificar en compran
+            PreparedStatement psCompran = conn.prepareStatement("SELECT COUNT(*) FROM compran WHERE id_videojuego = ?");
+            psCompran.setInt(1, id);
+            ResultSet rsCompran = psCompran.executeQuery();
+            rsCompran.next();
+            int ventas = rsCompran.getInt(1);
+
+            // Verificar en alquilan
+            PreparedStatement psAlquilan = conn.prepareStatement("SELECT COUNT(*) FROM alquilan WHERE id_videojuego = ?");
+            psAlquilan.setInt(1, id);
+            ResultSet rsAlquilan = psAlquilan.executeQuery();
+            rsAlquilan.next();
+            int alquileres = rsAlquilan.getInt(1);
+
+            if (ventas > 0 || alquileres > 0) {
+                JOptionPane.showMessageDialog(this, "No se puede eliminar el videojuego porque tiene ventas o alquileres registrados.");
+                return;
+            }
+
+            // Si no hay registros, eliminar
+            PreparedStatement stmt = conn.prepareStatement("DELETE FROM videojuegos WHERE id_videojuego = ?");
             stmt.setInt(1, id);
-            stmt.executeUpdate();
+            int eliminado = stmt.executeUpdate();
+            if (eliminado > 0) {
+                JOptionPane.showMessageDialog(this, "Videojuego eliminado.");
+                modelo.removeRow(fila);
+            }
 
-            JOptionPane.showMessageDialog(this, "Videojuego eliminado.");
-            modelo.removeRow(fila);
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(this, "Error al eliminar: " + ex.getMessage());
         }
